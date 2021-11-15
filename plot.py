@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import csv
 import math 
+import os 
+
 
 csvs = [('g','hpx.csv'), ('b', 'omp.csv')]
 
@@ -21,7 +23,6 @@ for i in csvs:
         count_mod = 0
         tempy = 0.0
         for row in lines:
-            print(row[1])
             tempy += float(row[1])
             if count_mod % 3 == 0:
                 x.append(row[0])
@@ -32,13 +33,12 @@ for i in csvs:
     x = x[::-1]
     x = [int(i) for i in x]
     y = y[::-1] 
-    print(x)
-    print(y)
     plt.plot(x, y, color = i[0], linestyle = 'dashed',
             marker = 'o')
     
 
 # Local Worksation half peak is 15732 MFLOP/s.
+cores = os.cpu_count() / 2 # hyperthreading
 plt.hlines(y=15732 * 10**6, xmin=2**5, xmax=2**24, colors='red', linestyles='dashed')
 
 plt.gca().invert_xaxis()
