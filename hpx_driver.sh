@@ -11,7 +11,7 @@ CORES=$(grep -c ^processor /proc/cpuinfo)
 # Get filename timestamp
 timestamp=$(date +"%Y_%m_%d_%I_%M_%p")
 
-for i in {6..24}
+for i in {6..27}
 do
     for j in {1..3}
     do
@@ -19,7 +19,7 @@ do
         echo -n "$ITER, " | tee -a ./csv/hpx$timestamp.csv
 
         /home/giannis/TaskBench/openmp_hpx/hpx/bin/local_par_for \
-        -kernel compute_bound -steps 1000 -width 16 -iter $ITER --hpx:threads=$CORES \
+        -type stencil_1d -kernel compute_bound -steps 1000 -width 48 -iter $ITER --hpx:threads=$CORES \
         | grep "FLOP/s" | cut -f2  -d " " | tee -a ./csv/hpx$timestamp.csv
     done   
 done
