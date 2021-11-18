@@ -7,20 +7,20 @@
 # If hyperthreading enabled:
 #grep ^cpu\\scores /proc/cpuinfo | uniq |  awk '{print $4}'
 
-# CORES=$(grep -c ^processor /proc/cpuinfo)
+CORES=$(grep -c ^processor /proc/cpuinfo)
 
-CORES=$((12))
-# echo "iter, tflops"
+# Get filename timestamp
+timestamp=$(date +"%Y_%m_%d_%I_%M_%p")
 
 for i in {6..21}
 do
     for j in {1..3}
     do
         ITER=$((2 ** $i)) 
-        echo -n "$ITER, "
+        echo -n "$ITER, " | tee -a ./csv/omp$timestamp.csv
 
         /home/giannis/TaskBench/openmp_hpx/openmp/main \
         -kernel compute_bound -steps 1000 -width 16 -iter $ITER -worker $CORES \
-        | grep "FLOP/s" | cut -f2  -d " "   
+        | grep "FLOP/s" | cut -f2  -d " " | tee -a ./csv/omp$timestamp.csv
     done
 done
