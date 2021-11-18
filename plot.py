@@ -2,23 +2,22 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
-import csv
-import math 
+import csv 
 import os 
+import glob
 
-
-csvs = [('g','hpx.csv'), ('b', 'omp.csv')]
+csvs = [f for f in glob.glob("*.csv")]
 
 # plt.figure()
 fig, ax = plt.subplots()
-ax.set_xscale('log', basex=2)
+ax.set_xscale('log', base=2)
 
 
 for i in csvs:
     x = []
     y = []
 
-    with open(i[1],'r') as csvfile:    
+    with open(i,'r') as csvfile:    
         lines = csv.reader(csvfile, delimiter=',')
         count_mod = 0
         tempy = 0.0
@@ -32,14 +31,15 @@ for i in csvs:
 
     x = x[::-1]
     x = [int(i) for i in x]
-    y = y[::-1] 
-    plt.plot(x, y, color = i[0], linestyle = 'dashed',
-            marker = 'o')
-    
+    y = y[::-1]
+    plt.plot(x, y, linestyle = 'dashed',
+            marker = 'o', label=i)
 
 # Local Worksation half peak is 15732 MFLOP/s.
 cores = os.cpu_count() / 2 # hyperthreading
 plt.hlines(y=15732 * 10**6, xmin=2**5, xmax=2**24, colors='red', linestyles='dashed')
+
+ax.legend()    
 
 plt.gca().invert_xaxis()
 plt.grid()
