@@ -10,7 +10,7 @@
 CORES=$(grep -c ^processor /proc/cpuinfo)
 
 # Get filename timestamp
-timestamp=$(date +"%Y_%m_%d_%I_%M_%p")
+timestamp=$(date +%Y_%m_%d_%H_%M_%S)
 
 for i in {6..27}
 do
@@ -20,7 +20,7 @@ do
         echo -n "$ITER, " | tee -a ./csv/omp$timestamp.csv
 
         /home/giannis/TaskBench/openmp_hpx/openmp/main \
-        -type stencil_1d -kernel compute_bound -steps 1000 -width  48 -iter $ITER -worker $CORES \
+        -type stencil_1d -kernel compute_bound -steps 1000 -width 48 -iter $ITER -worker $CORES \
         | grep "seconds\|FLOP/s"  |  grep -Eo '[0-9]+([.][0-9]+)?+[e+]+[e-]?+[0-9]?+[0-9]' | 
         xargs | sed -e 's/ /, /g' | tee -a ./csv/omp$timestamp.csv
     done
